@@ -15,7 +15,7 @@ install:
 	uv pip install pytest flask --python .venv/bin/python
 
 test:
-	@.venv/bin/python -m pytest test_santa.py -v
+	@.venv/bin/python -m pytest -v
 
 run:
 	.venv/bin/python app.py

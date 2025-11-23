@@ -233,7 +233,7 @@
         
         <!-- Result Screen -->
         <div id="resultScreen" class="result-screen">
-            <div class="section-title">Your Assignment</div>
+            <div class="section-title">Your Assignment <span id="partyEmoji" style="display:none;">🎉</span></div>
             <div class="result-card">
                 <div class="result-label">You are:</div>
                 <div class="your-name" id="yourName"></div>
@@ -367,6 +367,9 @@
                             } else {
                                 ul.style.top = `-${stopIndex * 30}px`;
                                 // Stop animation leaving final name visible
+                                ul.style.top = `-${stopIndex * 30}px`;
+                                const party = document.getElementById('partyEmoji');
+                                if (party) party.style.display = 'inline';
                             }
                         }
                         step();

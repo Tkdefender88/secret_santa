@@ -124,7 +124,6 @@ __pycache__/
 
 # Docker
 *.dockerignore
-Dockerfile
 
 tmp/
 

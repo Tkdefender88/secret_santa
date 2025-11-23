@@ -122,6 +122,38 @@
             font-size: 24px;
             font-weight: 600;
             color: #667eea;
+            position: relative;
+            height: 30px;
+            overflow: hidden;
+        }
+        
+        .scroll-container {
+            position: absolute;
+            width: 100%;
+            height: 30px;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+        }
+        
+        .scroll-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            width: 100%;
+            top: 0;
+            left: 0;
+            transition: top 0.3s ease;
+        }
+        
+        .scroll-list li {
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 24px;
         }
         
         .message {
@@ -272,7 +304,73 @@
                     document.getElementById('selectionScreen').style.display = 'none';
                     document.getElementById('resultScreen').classList.add('show');
                     document.getElementById('yourName').textContent = `${name} ${surname}`;
-                    document.getElementById('recipientName').textContent = `${data.name} ${data.surname}`;
+                    const names = [];
+                    // Prepare name list for animation
+                    const peopleRes = await fetch('/api/people');
+                    if (peopleRes.ok) {
+                        const peopleList = await peopleRes.json();
+                        for (const p of peopleList) {
+                            names.push(`${p.name} ${p.surname}`);
+                        }
+                    } else {
+                        names.push(`${data.name} ${data.surname}`);
+                    }
+
+                    animateRecipientName(names, `${data.name} ${data.surname}`);
+
+                    // Animation function
+                    function animateRecipientName(nameList, finalName) {
+                        const recipientDiv = document.getElementById('recipientName');
+                        recipientDiv.textContent = '';
+                        const scrollContainer = document.createElement('div');
+                        scrollContainer.className = 'scroll-container';
+                        const ul = document.createElement('ul');
+                        ul.className = 'scroll-list';
+
+                        // Repeat names multiple times for scroll effect
+                        const repeatCount = 10;
+                        for (let i = 0; i < repeatCount; i++) {
+                            for (const name of nameList) {
+                                const li = document.createElement('li');
+                                li.textContent = name;
+                                ul.appendChild(li);
+                            }
+                        }
+
+                        scrollContainer.appendChild(ul);
+                        recipientDiv.appendChild(scrollContainer);
+
+                        // Find all indexes of finalName in big list
+                        const allIndexes = [];
+                        for (let i = 0; i < repeatCount * nameList.length; i++) {
+                            if (ul.children[i].textContent === finalName) {
+                                allIndexes.push(i);
+                            }
+                        }
+
+                        // Choose the last occurrence index to stop at
+                        const stopIndex = allIndexes[allIndexes.length - 1];
+
+                        let index = 0;
+                        let delay = 20;
+
+                        function step() {
+                            index++;
+                            let speedUpLimit = stopIndex - 30; // start slowing 30 spots before
+                            if (index >= speedUpLimit) {
+                                delay = delay * 1.07; // increase delay slowly for deceleration
+                            }
+                            ul.style.top = `-${index * 30}px`;
+
+                            if (index < stopIndex) {
+                                setTimeout(step, delay);
+                            } else {
+                                ul.style.top = `-${stopIndex * 30}px`;
+                                // Stop animation leaving final name visible
+                            }
+                        }
+                        step();
+                    }
                 } else {
                     showMessage(data.error || 'Could not find assignment', 'error');
                 }

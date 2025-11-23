@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View - Secret Santa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #999;
+            margin-bottom: 30px;
+        }
+        
+        .assignments {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .assignment-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .giver {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .arrow {
+            color: #667eea;
+            margin: 0 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .recipient {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: right;
+        }
+        
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+        }
+        
+        .back-link {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎅 Secret Santa Assignments</h1>
+        <div class="subtitle">Admin View - Keep This Secret!</div>
+        
+        {% if assignments %}
+            <div class="assignments">
+                {% for assignment in assignments %}
+                    <div class="assignment-card">
+                        <div class="giver">{{ assignment.giver }}</div>
+                        <div class="arrow">→</div>
+                        <div class="recipient">{{ assignment.recipient }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty">No assignments yet. Run the drawing first.</div>
+        {% endif %}
+        
+        <div class="back-link">
+            <a href="/admin">← Back to Admin</a>
+        </div>
+    </div>
+</body>
+</html>

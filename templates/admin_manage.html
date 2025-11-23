@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Secret Santa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .logout-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        button.danger {
+            background: #e74c3c;
+        }
+        
+        button.danger:hover {
+            background: #c0392b;
+        }
+        
+        button.secondary {
+            background: #999;
+        }
+        
+        button.secondary:hover {
+            background: #777;
+        }
+        
+        .people-list {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        
+        .person-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #667eea;
+        }
+        
+        .person-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .person-name {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .person-surname {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-buttons button {
+            flex: 1;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        .action-buttons {
+            flex-direction: column;
+        }
+        .action-buttons a {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎅 Admin Panel</h1>
+            <a href="/admin/logout" class="logout-link">Logout</a>
+        </div>
+        
+        <div id="message"></div>
+        
+        <div class="section">
+            <div class="section-title">Add Participants</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">First Name</label>
+                    <input type="text" id="name" placeholder="e.g., Alice">
+                </div>
+                <div class="form-group">
+                    <label for="surname">Last Name</label>
+                    <input type="text" id="surname" placeholder="e.g., Smith">
+                </div>
+            </div>
+            <button onclick="addPerson()">Add Person</button>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Participants</div>
+            <div id="peopleList" class="people-list">
+                <div class="empty-state">No participants yet</div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button onclick="performDraw()">🎲 Draw Names</button>
+            <button class="danger" onclick="clearAll()">Clear All</button>
+            <a href="/admin/assignments" style="flex: 1; text-decoration: none;">
+                <button style="width: 100%;">👁️ View Assignments</button>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        function showMessage(text, type = 'success') {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            setTimeout(() => msg.textContent = '', 3000);
+        }
+        
+        async function addPerson() {
+            const name = document.getElementById('name').value.trim();
+            const surname = document.getElementById('surname').value.trim();
+            
+            if (!name || !surname) {
+                showMessage('Please enter both name and surname', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/people', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer admin'
+                    },
+                    body: JSON.stringify({ name, surname })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('name').value = '';
+                    document.getElementById('surname').value = '';
+                    loadPeople();
+                    showMessage(`${name} ${surname} added!`);
+                } else {
+                    const data = await response.json();
+                    showMessage(data.error || 'Error adding person', 'error');
+                }
+            } catch (error) {
+                showMessage('Error: ' + error, 'error');
+            }
+        }
+        
+        async function loadPeople() {
+            try {
+                const response = await fetch('/api/people');
+                const people = await response.json();
+                
+                const list = document.getElementById('peopleList');
+                if (people.length === 0) {
+                    list.innerHTML = '<div class="empty-state">No participants yet</div>';
+                    return;
+                }
+                
+                list.innerHTML = people.map(p => `
+                    <div class="person-item">
+                        <div>
+                            <div class="person-name">${p.name}</div>
+                            <div class="person-surname">${p.surname}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading people:', error);
+            }
+        }
+        
+        async function performDraw() {
+            try {
+                const response = await fetch('/api/draw', { method: 'POST' });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage(`✨ Drawing complete! ${data.count} people matched.`);
+                } else {
+                    showMessage(data.error || 'Drawing failed', 'error');
+                }
+            } catch (error) {
+                showMessage('Error: ' + error, 'error');
+            }
+        }
+        
+        async function clearAll() {
+            if (!confirm('Clear all participants and assignments?')) return;
+            
+            try {
+                const response = await fetch('/api/people', { method: 'DELETE' });
+                if (response.ok) {
+                    loadPeople();
+                    showMessage('All cleared');
+                } else {
+                    showMessage('Error clearing', 'error');
+                }
+            } catch (error) {
+                showMessage('Error: ' + error, 'error');
+            }
+        }
+        
+        // Load people on page load
+        loadPeople();
+    </script>
+</body>
+</html>

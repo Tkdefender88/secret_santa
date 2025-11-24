@@ -29,6 +29,10 @@ class SantaAssigner:
         if giver['surname'] == recipient['surname']:
             return False
         
+        # Prevent 2-cycles (A->B and B->A)
+        if self.assignments.get(recipient_id) == giver_id:
+            return False
+        
         return True
     
     def assign(self) -> bool:

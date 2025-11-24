@@ -42,10 +42,9 @@ def test_clear_people(client):
 
 
 def test_draw_assignments(client):
-    # Need at least 2 people
+    # With only 2 people, 2-cycle is forbidden -> should fail
     client.post('/api/people', json={'name': 'Alice', 'surname': 'Smith'})
     client.post('/api/people', json={'name': 'Bob', 'surname': 'Jones'})
     rv = client.post('/api/draw')
-    assert rv.status_code == 200
-    assert rv.json['status'] == 'drawn'
-    assert rv.json['count'] == 2
+    assert rv.status_code == 400
+    assert 'error' in rv.json

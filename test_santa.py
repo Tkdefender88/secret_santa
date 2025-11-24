@@ -12,11 +12,7 @@ def test_valid_assignment():
     ]
     
     assigner = SantaAssigner(people)
-    assert assigner.assign() is True
-    
-    # Alice should get Bob, Bob should get Alice
-    assert assigner.get_recipient('1') == '2'
-    assert assigner.get_recipient('2') == '1'
+    assert assigner.assign() is False
 
 
 def test_prevents_self_assignment():
